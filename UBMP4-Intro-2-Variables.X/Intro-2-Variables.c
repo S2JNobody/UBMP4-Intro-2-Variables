@@ -18,6 +18,9 @@
 
 #include    "UBMP4.h"           // Include UBMP4 constants and functions
 
+#define pressed 0
+#define notPressed 1
+
 // TODO Set linker ROM ranges to 'default,-0-7FF' under "Memory model" pull-down.
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
@@ -27,6 +30,8 @@ const unsigned char maxCount = 50;
 // Program variable definitions
 unsigned char SW2Count = 0;
 bool SW2Pressed = false;
+unsigned char SW5Count = 0;
+bool SW5Pressed = false;
 
 int main(void)
 {
@@ -37,18 +42,22 @@ int main(void)
     // Code in this while loop runs repeatedly.
     while(1)
 	{
-        // Count SW2 button presses
-        if(SW2 == 0)
+        // Count new SW2 button presses
+        if(SW2 == pressed && !SW2Pressed)
         {
             LED3 = 1;
             if(SW2Count < 255)
             {
-                SW2Count += 1;
+                SW2Count = SW2Count + 1;
             }
+            SW2Pressed = true;
         }
-        else
+
+        // Clear pressed state if released
+        if(SW2 == notPressed)
         {
             LED3 = 0;
+            SW2Pressed = false;
         }
         
         if(SW2Count >= maxCount)
@@ -59,12 +68,41 @@ int main(void)
         {
             LED4 = 0;
         }
+
+        // Count new SW5 button presses
+        if(SW5 == pressed && !SW5Pressed)
+        {
+            LED6 = 1;
+            if(SW5Count < 255)
+            {
+                SW5Count = SW5Count + 1;
+            }
+            SW5Pressed = true;
+        }
+
+        // Clear pressed state if released
+        if(SW5 == notPressed)
+        {
+            LED6 = 0;
+            SW5Pressed = false;
+        }
+        
+        if(SW5Count >= maxCount)
+        {
+            LED5 = 1;
+        }
+        else
+        {
+            LED5 = 0;
+        }
         
         // Reset count and turn off LED D4
-        if(SW3 == 0)
+        if(SW3 == 0 || SW4 == 0)
         {
             LED4 = 0;
+            LED5 = 0;
             SW2Count = 0;
+            SW5Count = 0;
         }
         
         // Add a short delay to the main while loop.
@@ -240,7 +278,7 @@ Drawbacks: Can't store very big things
  *    variables. Then, duplicate the required if condition structures and modify
  *    the variable names to represent the second player. LED D4 can still light
  *    if player 1 is the first to reach maxCount. Use LED D5 to show if the
- *    second palyer wins. Use a logical condition statement to reset the game
+ *    second player wins. Use a logical condition statement to reset the game
  *    by clearing the count and turning off the LEDs if either SW3 or SW4 is
  *    pressed.
  * 
