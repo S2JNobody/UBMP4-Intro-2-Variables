@@ -32,6 +32,7 @@ unsigned char SW2Count = 0;
 bool SW2Pressed = false;
 unsigned char SW5Count = 0;
 bool SW5Pressed = false;
+unsigned char SW5HeldTime = 0;
 
 int main(void)
 {
@@ -70,21 +71,27 @@ int main(void)
         }
 
         // Count new SW5 button presses
-        if(SW5 == pressed && !SW5Pressed)
+        if(SW5 == pressed)
         {
-            LED6 = 1;
-            if(SW5Count < 255)
-            {
-                SW5Count = SW5Count + 1;
+            if (!SW5Pressed) {
+                LED6 = !LED6;
+                SW5Pressed = true;
+            } else {
+                SW5HeldTime++;
             }
-            SW5Pressed = true;
+        }
+
+        if (SW5HeldTime > 100) {
+            LED4 = 1;
+        } else {
+            LED4 = 0;
         }
 
         // Clear pressed state if released
         if(SW5 == notPressed)
         {
-            LED6 = 0;
             SW5Pressed = false;
+            SW5HeldTime = 0;
         }
 
         if(SW5Count >= maxCount)
