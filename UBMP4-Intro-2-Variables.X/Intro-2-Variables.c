@@ -86,7 +86,7 @@ int main(void)
             LED6 = 0;
             SW5Pressed = false;
         }
-        
+
         if(SW5Count >= maxCount)
         {
             LED5 = 1;
