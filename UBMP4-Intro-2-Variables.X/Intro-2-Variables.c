@@ -33,6 +33,7 @@ bool SW2Pressed = false;
 unsigned char SW5Count = 0;
 bool SW5Pressed = false;
 unsigned char SW5HeldTime = 0;
+unsigned char SW2CountToShow = 0;
 
 int main(void)
 {
@@ -52,6 +53,29 @@ int main(void)
                 SW2Count = SW2Count + 1;
             }
             SW2Pressed = true;
+            SW2CountToShow = SW2Count;
+
+            if (SW2CountToShow > 0) {
+                if (SW2CountToShow >= 10) {
+                    LED6 = 1;
+                    __delay_ms(150);
+                    LED6 = 0;
+                    __delay_ms(75);
+                    SW2CountToShow -= 10;
+                } else if (SW2CountToShow >= 5) {
+                    LED5 = 1;
+                    __delay_ms(150);
+                    LED5 = 0;
+                    __delay_ms(75);
+                    SW2CountToShow -= 5;
+                } else if (SW2CountToShow >= 1) {
+                    LED4 = 1;
+                    __delay_ms(150);
+                    LED4 = 0;
+                    __delay_ms(75);
+                    SW2CountToShow -= 1;
+                }
+            }
         }
 
         // Clear pressed state if released
@@ -60,49 +84,7 @@ int main(void)
             LED3 = 0;
             SW2Pressed = false;
         }
-        
-        if(SW2Count >= maxCount)
-        {
-            LED4 = 1;
-        }
-        else
-        {
-            LED4 = 0;
-        }
 
-        // Count new SW5 button presses
-        if(SW5 == pressed)
-        {
-            if (!SW5Pressed) {
-                LED6 = !LED6;
-                SW5Pressed = true;
-            } else {
-                SW5HeldTime++;
-            }
-        }
-
-        if (SW5HeldTime > 100) {
-            LED4 = 1;
-        } else {
-            LED4 = 0;
-        }
-
-        // Clear pressed state if released
-        if(SW5 == notPressed)
-        {
-            SW5Pressed = false;
-            SW5HeldTime = 0;
-        }
-
-        if(SW5Count >= maxCount)
-        {
-            LED5 = 1;
-        }
-        else
-        {
-            LED5 = 0;
-        }
-        
         // Reset count and turn off LED D4
         if(SW3 == 0 || SW4 == 0)
         {
