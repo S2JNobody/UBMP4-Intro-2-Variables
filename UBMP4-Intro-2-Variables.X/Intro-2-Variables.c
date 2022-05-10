@@ -34,6 +34,7 @@ unsigned char SW5Count = 0;
 bool SW5Pressed = false;
 unsigned char SW5HeldTime = 0;
 unsigned char SW2CountToShow = 0;
+unsigned char SW2Cooldown = 0;
 
 int main(void)
 {
@@ -45,7 +46,7 @@ int main(void)
     while(1)
 	{
         // Count new SW2 button presses
-        if(SW2 == pressed && !SW2Pressed)
+        if(SW2 == pressed && !SW2Pressed && SW2Cooldown == 0)
         {
             LED3 = 1;
             if(SW2Count < 255)
@@ -53,29 +54,13 @@ int main(void)
                 SW2Count = SW2Count + 1;
             }
             SW2Pressed = true;
-            SW2CountToShow = SW2Count;
+            SW2Cooldown = 50;
+        }
 
-            if (SW2CountToShow > 0) {
-                if (SW2CountToShow >= 10) {
-                    LED6 = 1;
-                    __delay_ms(150);
-                    LED6 = 0;
-                    __delay_ms(75);
-                    SW2CountToShow -= 10;
-                } else if (SW2CountToShow >= 5) {
-                    LED5 = 1;
-                    __delay_ms(150);
-                    LED5 = 0;
-                    __delay_ms(75);
-                    SW2CountToShow -= 5;
-                } else if (SW2CountToShow >= 1) {
-                    LED4 = 1;
-                    __delay_ms(150);
-                    LED4 = 0;
-                    __delay_ms(75);
-                    SW2CountToShow -= 1;
-                }
-            }
+        if (SW2Count >= 10) {
+            LED6 = 1;
+        } else {
+            LED6 = 0;
         }
 
         // Clear pressed state if released
@@ -96,6 +81,9 @@ int main(void)
         
         // Add a short delay to the main while loop.
         __delay_ms(10);
+        if (SW2Cooldown > 0) {
+            SW2Cooldown -= 10;
+        }
         
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
@@ -298,4 +286,8 @@ Drawbacks: Can't store very big things
  *    multi-function button that could be implemented to make your program
  *    ignore switch bounces. Multiple switch activations within a 50ms time span
  *    might indicate switch bounce and can be safely ignored.
+
+I can't really tell if my pushbuttons bounce
+but they shouldn't anymore
+
  */
