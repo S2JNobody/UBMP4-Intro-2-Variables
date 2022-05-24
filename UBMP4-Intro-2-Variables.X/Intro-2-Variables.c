@@ -45,45 +45,23 @@ int main(void)
     // Code in this while loop runs repeatedly.
     while(1)
 	{
-        // Count new SW2 button presses
-        if(SW2 == pressed && !SW2Pressed && SW2Cooldown == 0)
-        {
-            LED3 = 1;
-            if(SW2Count < 255)
-            {
-                SW2Count = SW2Count + 1;
-            }
-            SW2Pressed = true;
-            SW2Cooldown = 50;
-        }
 
-        if (SW2Count >= 10) {
-            LED6 = 1;
-        } else {
-            LED6 = 0;
-        }
-
-        // Clear pressed state if released
-        if(SW2 == notPressed)
-        {
-            LED3 = 0;
-            SW2Pressed = false;
-        }
-
-        // Reset count and turn off LED D4
-        if(SW3 == 0 || SW4 == 0)
-        {
-            LED4 = 0;
-            LED5 = 0;
-            SW2Count = 0;
+        if (SW3 == 0) {
+            LATC = 0;
             SW5Count = 0;
         }
+
+        if (SW5 == 0) {
+            SW5Count++;
+            while (SW5 == 0);
+        }
+
+        LATC = SW5Count << 4;
         
+
+
         // Add a short delay to the main while loop.
         __delay_ms(10);
-        if (SW2Cooldown > 0) {
-            SW2Cooldown -= 10;
-        }
         
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
@@ -286,8 +264,5 @@ Drawbacks: Can't store very big things
  *    multi-function button that could be implemented to make your program
  *    ignore switch bounces. Multiple switch activations within a 50ms time span
  *    might indicate switch bounce and can be safely ignored.
-
-I can't really tell if my pushbuttons bounce
-but they shouldn't anymore
 
  */
