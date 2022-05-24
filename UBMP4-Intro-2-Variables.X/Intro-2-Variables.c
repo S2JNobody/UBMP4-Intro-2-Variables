@@ -145,7 +145,7 @@ Drawbacks: Can't store very big things
  *    SW2Count variable as the SW2 button is held?
  * 
 
- It somehow becomes less than maxCount again
+ It somehow becomes less than maxCount again (It goes from 255 back down to 0 when 1 is added)
 
  * 5. We can set a limit on the SW2Count variable by encapsulating its increment
  *    statement inside a conditional statement. In your program, replace the
@@ -163,7 +163,7 @@ Drawbacks: Can't store very big things
  *    operation of LED D4 when SW2 is held?
 
  The maximum value it will reach is 255
- The means LED D4 will never turn off again
+ This means LED D4 will never turn off again
 
  *
  * 6. The fundamental problem with this program is that pushbutton SW2 is sensed
@@ -225,7 +225,7 @@ Drawbacks: Can't store very big things
  *    program more readable at the expense of hiding the actual switch value in
  *    the definition statement instead of making it obvious in the if structure.
  *    Try it in your code, and modify the SW3 reset button to work with the same
- *    pressed adn notPressed definitions.
+ *    pressed and notPressed definitions.
  
         // Count new SW2 button presses
         if(SW2 == pressed && SW2Pressed == false)
